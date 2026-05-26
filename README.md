@@ -302,79 +302,6 @@ Example:
 | Text-only         | 59.52%        |
 | Multimodal Fusion | 99.05%        |
 
-
-
----
-
-# Key Observations
-
-## Speech Model Performance
-
-The speech model achieved near-perfect accuracy because:
-
-* TESS is clean studio audio
-* Emotional acoustic patterns are well separated
-* BiLSTM captures temporal dynamics effectively
-
----
-
-## Text Model Limitations
-
-The text-only pipeline underperformed because:
-
-* TESS contains isolated words only
-* Lexical information is weak
-* Emotion mainly exists in vocal delivery
-
----
-
-## Fusion Benefits
-
-Fusion improved robustness for:
-
-* Fear vs disgust
-* Sad vs neutral
-* Low-confidence speech samples
-
-The gating layer dynamically shifts reliance between modalities. 
-
----
-
-# Error Analysis
-
-## Common Confusions
-
-### Fear vs Disgust
-
-Both emotions share:
-
-* Similar vocal tension
-* Breathy voice
-* Comparable pitch ranges
-
----
-
-### Sad vs Neutral
-
-Soft sad speech occasionally overlaps with neutral speech because of:
-
-* Low energy
-* Slow speaking rate
-* Quiet vocal delivery
-
----
-
-### Pleasant Surprise vs Happy
-
-Both emotions contain:
-
-* High energy
-* Large pitch variations
-
-Temporal contour differences are subtle.
-
-
-
 ---
 
 # Streamlit Web Application
@@ -500,6 +427,42 @@ source emotion_env/bin/activate
 pip install -r requirements.txt
 ```
 
+# Dataset and Model Downloads
+
+## Toronto Emotional Speech Set (TESS) Dataset
+
+Download the dataset from the following Google Drive link:
+
+```txt id="dataset-link"
+https://drive.google.com/drive/folders/1RGzimPnIfldMy_3vvyCPFOguI0Gy3Mj_?usp=drive_link
+```
+
+---
+
+# Pretrained Model Checkpoints
+
+## Fusion Model
+
+```txt id="fusion-model"
+https://drive.google.com/file/d/14Nc9VKp3ALGyuaQQ1iaLt6o4LC0SNQtE/view?usp=drive_link
+```
+
+---
+
+## Speech Model
+
+```txt id="speech-model"
+https://drive.google.com/file/d/1XG_4Oz8DzKRY_kz7OFdMlNT-nblsmz0X/view?usp=drive_link
+```
+
+---
+
+## Text Model
+
+```txt id="text-model"
+https://drive.google.com/file/d/1kOPOc18u3gq8iESDpG1NkfgSsCTrxX0A/view?usp=drive_link
+```
+
 ---
 
 # Run the Application
@@ -507,6 +470,39 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
+
+---
+# Key Observations
+
+## Speech Model Performance
+
+The speech model achieved near-perfect accuracy because:
+
+* TESS is clean studio audio
+* Emotional acoustic patterns are well separated
+* BiLSTM captures temporal dynamics effectively
+
+---
+
+## Text Model Limitations
+
+The text-only pipeline underperformed because:
+
+* TESS contains isolated words only
+* Lexical information is weak
+* Emotion mainly exists in vocal delivery
+
+---
+
+## Fusion Benefits
+
+Fusion improved robustness for:
+
+* Fear vs disgust
+* Sad vs neutral
+* Low-confidence speech samples
+
+The gating layer dynamically shifts reliance between modalities. 
 
 ---
 
