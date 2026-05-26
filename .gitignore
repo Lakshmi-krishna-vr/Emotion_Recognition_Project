@@ -1,0 +1,48 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+emotion_env/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Streamlit cache
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Model checkpoints
+*.pth
+*.pt
+*.ckpt
+*.h5
+
+# Audio/temp generated files
+temp/
+tmp/
+.csv
+
+# Results folder (optional)
+data/TESS Toronto emotional speech set data
+
+# Python build files
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
+
