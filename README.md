@@ -1,144 +1,580 @@
-# Multimodal Emotion Recognition using Gated Fusion on TESS
+# Multimodal Emotion Recognition using Speech, Text, and Fusion
 
-[![Streamlit App](https://static.streamlit.io/badge.svg)](https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-orange)](https://huggingface.co/docs/transformers/index)
+A deep learning–based multimodal emotion recognition system that combines:
 
-An end-to-end deep learning framework that implements a multi-stage **Gated Multimodal Fusion Architecture** to perform 7-class emotion recognition on the **Toronto Emotional Speech Set (TESS)**. This system balances two independent sensory contexts: raw audio temporal dynamics and rule-based acoustic-prosodic feature verbalizations analyzed using a fine-tuned Pre-trained Language Model (BERT).
+* **Speech-based emotion detection** using **BiLSTM + Attention**
+* **Text-based emotion detection** using **Fine-tuned BERT**
+* **Multimodal gated fusion** combining acoustic and linguistic representations
 
----
-
-## 🚀 Live Deployment & Web Application
-The application is fully optimized, compiled, and deployed in production. You can interact with the live application, upload audio files, and verify inference streams directly through the web browser:
-
-👉 **[Live Streamlit Application Portal](https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/)**
-
-### 🖥️ Production Web UI Preview
-When an audio track is supplied to the application interface, the cloud infrastructure dynamically extracts acoustic statistics, verbalizes the prosody profile, and displays side-by-side classification confidence distributions for all three deep learning blocks.
-
-<p align="center">
-  <img src="image_c0313f.png" alt="Streamlit Web Application Dashboard Interface" width="90%" />
-</p>
+The project is trained and evaluated on the **TESS (Toronto Emotional Speech Set)** dataset and deployed as a real-time interactive **Streamlit web application**. 
 
 ---
 
-## ⚙️ Architecture & Core Components
+# Live Demo
 
-This project splits processing into three concurrent pipelines using standard audio boundaries:
+Add your deployed Streamlit link here:
 
-1. **Speech-Only Pipeline:** Extracts 40-dimensional Mel-Frequency Cepstral Coefficients (MFCC) alongside their first and second-order temporal derivatives ($\Delta$ and $\Delta\Delta$), yielding a 120-dimensional frame feature vector. These inputs pass through a 2-layer **Bidirectional LSTM (BiLSTM)** supported by an **Additive Single-Layer Attention Mechanism** to emphasize high-confidence emotional fragments.
-2. **Text-Only Pipeline:** Computes 9 structural prosodic statistics (RMS energy, fundamental frequency $F_0$, zero-crossing rates, spectral centroids, and Harmonic-to-Noise Ratios) via `librosa`. These statistics are translated into natural-language sentences (e.g., *"The speaker has high pitched tone, fast speaking rate..."*) and combined with the target token, bypassing structural limitations using a parameter-efficient **Fine-Tuned BERT Encoder** (top 6 layers unfrozen).
-3. **Gated Multimodal Fusion Pipeline:** Integrates hidden contexts from both architectures. Instead of uniform feature concatenation, it evaluates a learnable **Gated Fusion Network** that dynamically assigns importance weights to each sensory branch based on dimensional proximity matrixes.
+```txt
+https://your-streamlit-app-link.streamlit.app
+```
+
+---
+
+# Project Overview
+
+This project explores how emotional information can be extracted from:
+
+1. Raw speech signals
+2. Verbalized acoustic-prosodic descriptions
+3. Combined multimodal representations
+
+Three independent pipelines were trained and evaluated:
+
+| Pipeline          | Input                | Model                |
+| ----------------- | -------------------- | -------------------- |
+| Speech-only       | MFCC audio features  | BiLSTM + Attention   |
+| Text-only         | Prosody descriptions | Fine-tuned BERT      |
+| Multimodal Fusion | Speech + Text        | Gated Fusion Network |
+
+The system predicts the following emotions:
+
+* Angry
+* Disgust
+* Fear
+* Happy
+* Neutral
+* Pleasant Surprise
+* Sad
+
+---
+
+# Dataset
+
+## Toronto Emotional Speech Set (TESS)
+
+The project uses the **TESS dataset**, containing recordings from two female actors speaking target words with different emotional tones. 
+
+### Dataset Characteristics
+
+* Clean studio-quality recordings
+* WAV format
+* 22,050 Hz mono audio
+* 7 emotion classes
+* Controlled emotional expressions
+
+### Data Split
+
+| Split      | Percentage |
+| ---------- | ---------- |
+| Training   | 70%        |
+| Validation | 15%        |
+| Test       | 15%        |
+
+---
+
+# System Architecture
+
+## Overall Pipeline
 
 ```text
-                   ┌───────────────┐
-                   │  Audio File   │
-                   └───────┬───────┘
-                           │
-           ┌───────────────┴───────────────┐
-           ▼                               ▼
-   [MFCC Extraction]             [Prosody Verbalization]
-     Shape: [T, 120]               "Voice cues: Loud voice..."
-           │                               │
-           ▼                               ▼
-    BiLSTM + Attention              Fine-Tuned BERT
-  Speech Context vector (s)      Text Context vector (t)
-           │                               │
-           └───────────────┬───────────────┘
-                           │
-                           ▼
-                 ┌──────────────────┐
-                 │   Gated Fusion   │◄── Dynamically scales weights
-                 └──────────────────┘
-                           │
-                           ▼
-                 ┌──────────────────┐
-                 │  7-Class Output  │
-                 └──────────────────┘
-
-## 📊 Experimental Setup & Performance
-
-Models were trained utilizing a stratified split (70% Train, 15% Val, 15% Test) on the TESS dataset across 7 core emotion categories: *Angry, Disgust, Fear, Happy, Neutral, Pleasant Surprise, Sad*.
-
-### Benchmark Evaluation Metrics
-
-| Pipeline Framework | Modality Vector Input | Core Model Architecture | Test Split Accuracy | Training Window |
-| :--- | :--- | :--- | :---: | :---: |
-| **Speech-Only** | Audio (MFCC + $\Delta$ + $\Delta\Delta$) | BiLSTM + Attention | **99.05%** | 30 Epochs |
-| **Text-Only** | Verbalized Acoustic Heuristics | BERT-Base (Top-6 Fine-tuned) | **59.52%** | 15 Epochs |
-| **Multimodal Fusion** | Integrated Embedded Latents | Gated Cross-Modal Networks | **99.05%** | 20 Epochs |
-
-> 📌 **Key Architectural Insight:** The isolated word metrics for the Text-Only setup ($59.52\%$) reflect the strict linguistic constraints of utilizing single-word transcripts ("dog", "bird"). However, when context features overlap or boundary ambiguities arise within raw audio (e.g., *Disgust vs. Fear*), the **Gated Fusion layer** successfully balances channels to resolve confusion matrices effectively, allowing the multi-modal network to anchor securely to the high-performing speech dynamics channel ($99.05\%$).
+                Audio (.wav)
+                      │
+        ┌─────────────┴─────────────┐
+        │                           │
+   MFCC Extraction          Prosody Feature Extraction
+        │                           │
+ BiLSTM + Attention         Prosody Text Generation
+        │                           │
+ Speech Representation      Fine-tuned BERT
+        │                           │
+        └─────────────┬─────────────┘
+                      │
+               Gated Fusion
+                      │
+              Emotion Classifier
+                      │
+              7-class Emotion
+```
 
 ---
 
-## 📂 Repository Structure
-├── Results/                        # Saved checkpoint metrics and analytics
-│   ├── speech_best_model.pt        # Trained BiLSTM Attention weights (9.9 MB)
-│   ├── text_best_model.pt          # Fine-tuned BERT checkpoint weights (438.8 MB)
-│   ├── fusion_best_model.pt        # Trained Gated Fusion framework weights (453.2 MB)
-│   ├── speech_history.png          # Optimization history profiles for speech
-│   ├── speech_confusion_matrix.png # Final speech class performance matrix
-│   ├── text_history.png
+# Speech Pipeline
 
-│   ├── text_confusion_matrix.png
+## Feature Extraction using MFCCs
 
-│   ├── fusion_history.png
+The speech pipeline processes raw audio into MFCC-based features. 
 
-│   └── fusion_confusion_matrix.png # Unified gating validation metrics
-├── models/                         # Training logic routines
-│   ├── speech_pipeline/
-│   ├── text_pipeline/
-│   └── fusion_pipeline/
-├── image_c0313f.png                # Streamlit live app user interface preview image
-├── app.py                          # Streamlit application orchestration file
-├── local_test.py                   # Command-line smoke test inference module
-├── utils.py                        # Librosa audio features and verbalization bridges
-└── requirements.txt                # Operational environment pinning requirements
+### Features Used
 
-## 🛠️ Local Installation & Environment Setup
+* 40 MFCC coefficients
+* Delta coefficients (Δ)
+* Delta-delta coefficients (ΔΔ)
 
-1. **Clone the Repository:**
-   ```bash
-   git clone [https://github.com/your-username/multimodal-emotion-recognition.git](https://github.com/your-username/multimodal-emotion-recognition.git)
-   cd multimodal-emotion-recognition
+Final feature dimension:
 
-2. Configure Environment Dependencies:
-Ensure you have Python 3.10 or higher installed. Install dependencies using:
+```text
+40 × 3 = 120-dimensional feature vector
+```
 
-Bash
+### Why MFCC?
+
+MFCCs are highly effective for speech emotion recognition because they:
+
+* Capture vocal timbre
+* Preserve spectral information
+* Encode speech dynamics
+* Reduce irrelevant information
+
+---
+
+## BiLSTM Temporal Modeling
+
+The extracted MFCC sequences are passed into a:
+
+```text
+2-layer Bidirectional LSTM
+```
+
+### Configuration
+
+| Parameter            | Value          |
+| -------------------- | -------------- |
+| Hidden size          | 256            |
+| Directions           | Bidirectional  |
+| Final representation | 512 dimensions |
+| Dropout              | 0.3            |
+
+### Why BiLSTM?
+
+BiLSTM captures:
+
+* Past context
+* Future context
+* Emotional progression over time
+
+This is important because emotions evolve throughout speech.
+
+---
+
+## Attention Mechanism
+
+An attention layer learns which parts of speech are emotionally important.
+
+Instead of treating all frames equally, attention focuses on:
+
+* Sudden pitch changes
+* Emotional bursts
+* Intonation peaks
+* Voice stress regions
+
+This improves emotion discrimination significantly. 
+
+---
+
+# Text Pipeline
+
+## Prosody-to-Text Conversion
+
+Instead of using only raw transcripts, the system converts acoustic statistics into natural-language descriptions. 
+
+### Extracted Prosody Features
+
+The following acoustic properties are computed using `librosa`:
+
+* RMS energy
+* Pitch statistics (F0)
+* Pitch variation
+* Voiced ratio
+* Zero-crossing rate
+* Spectral centroid
+* Harmonic-to-noise ratio
+
+### Example Generated Description
+
+```text
+"The speaker has very loud and energetic voice,
+high pitched tone, wide pitch variation,
+fast speaking rate, bright sharp timbre."
+```
+
+---
+
+## Fine-tuned BERT
+
+The generated textual descriptions are processed using:
+
+```text
+bert-base-uncased
+```
+
+### Training Strategy
+
+* Bottom 6 layers frozen
+* Top 6 layers fine-tuned
+* Max token length: 64
+
+### Why BERT?
+
+BERT understands semantic relationships between:
+
+* Pitch descriptions
+* Vocal intensity
+* Speaking rate
+* Voice quality
+
+This allows emotion inference from verbalized acoustic patterns.
+
+---
+
+# Multimodal Fusion
+
+## Gated Fusion Architecture
+
+The speech and text embeddings are fused using a learnable gating mechanism. 
+
+### Inputs
+
+| Representation   | Dimension |
+| ---------------- | --------- |
+| Speech embedding | 512       |
+| Text embedding   | 768       |
+
+### Fusion Strategy
+
+The gate dynamically decides:
+
+* When to trust speech more
+* When to trust text more
+
+### Why Gated Fusion?
+
+Simple concatenation treats all modalities equally.
+
+Gated fusion learns adaptive weighting depending on the input characteristics.
+
+Example:
+
+* Angry → speech dominates
+* Sad → text cues become more important
+
+---
+
+# Training Configuration
+
+## Speech Model
+
+| Parameter     | Value |
+| ------------- | ----- |
+| Optimizer     | AdamW |
+| Learning Rate | 1e-3  |
+| Batch Size    | 32    |
+| Epochs        | 30    |
+
+---
+
+## Text Model
+
+| Parameter     | Value |
+| ------------- | ----- |
+| Optimizer     | AdamW |
+| Learning Rate | 2e-5  |
+| Batch Size    | 32    |
+| Epochs        | 15    |
+
+---
+
+## Fusion Model
+
+| Parameter   | Value |
+| ----------- | ----- |
+| Non-BERT LR | 2e-5  |
+| BERT LR     | 2e-6  |
+| Batch Size  | 8     |
+| Epochs      | 20    |
+
+---
+
+# Results
+
+## Model Performance
+
+| Pipeline          | Test Accuracy |
+| ----------------- | ------------- |
+| Speech-only       | 99.05%        |
+| Text-only         | 59.52%        |
+| Multimodal Fusion | 99.05%        |
+
+
+
+---
+
+# Key Observations
+
+## Speech Model Performance
+
+The speech model achieved near-perfect accuracy because:
+
+* TESS is clean studio audio
+* Emotional acoustic patterns are well separated
+* BiLSTM captures temporal dynamics effectively
+
+---
+
+## Text Model Limitations
+
+The text-only pipeline underperformed because:
+
+* TESS contains isolated words only
+* Lexical information is weak
+* Emotion mainly exists in vocal delivery
+
+---
+
+## Fusion Benefits
+
+Fusion improved robustness for:
+
+* Fear vs disgust
+* Sad vs neutral
+* Low-confidence speech samples
+
+The gating layer dynamically shifts reliance between modalities. 
+
+---
+
+# Error Analysis
+
+## Common Confusions
+
+### Fear vs Disgust
+
+Both emotions share:
+
+* Similar vocal tension
+* Breathy voice
+* Comparable pitch ranges
+
+---
+
+### Sad vs Neutral
+
+Soft sad speech occasionally overlaps with neutral speech because of:
+
+* Low energy
+* Slow speaking rate
+* Quiet vocal delivery
+
+---
+
+### Pleasant Surprise vs Happy
+
+Both emotions contain:
+
+* High energy
+* Large pitch variations
+
+Temporal contour differences are subtle.
+
+
+
+---
+
+# Streamlit Web Application
+
+The project includes a fully interactive Streamlit deployment. 
+
+## Features
+
+* Upload `.wav` files
+* Real-time emotion prediction
+* Speech prediction
+* Text prediction
+* Fusion prediction
+* Confidence score visualization
+* Prosody text generation
+* Comparative analysis across pipelines
+
+---
+
+# Tech Stack
+
+## Languages
+
+* Python
+
+## Deep Learning Frameworks
+
+* PyTorch
+* Transformers
+
+## Audio Processing
+
+* Librosa
+* NumPy
+
+## NLP
+
+* Hugging Face Transformers
+* BERT
+
+## Visualization
+
+* Matplotlib
+* Seaborn
+
+## Deployment
+
+* Streamlit
+* Streamlit Community Cloud
+
+---
+
+# Project Structure
+
+```text
+emotion-recognition/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── models/
+│   ├── speech_model.pth
+│   ├── text_model.pth
+│   └── fusion_model.pth
+│
+├── notebooks/
+│   ├── speech_pipeline.ipynb
+│   ├── text_pipeline.ipynb
+│   └── fusion_pipeline.ipynb
+│
+├── utils/
+│   ├── audio_utils.py
+│   ├── text_utils.py
+│   └── fusion_utils.py
+│
+├── dataset/
+│   └── TESS/
+│
+└── assets/
+    ├── architecture.png
+    ├── confusion_matrix.png
+    └── ui_demo.png
+```
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/emotion-recognition.git
+
+cd emotion-recognition
+```
+
+---
+
+## Create Virtual Environment
+
+### Windows
+
+```bash
+python -m venv emotion_env
+
+emotion_env\Scripts\activate
+```
+
+### Linux / Mac
+
+```bash
+python3 -m venv emotion_env
+
+source emotion_env/bin/activate
+```
+
+---
+
+## Install Dependencies
+
+```bash
 pip install -r requirements.txt
-Note: System-level audio manipulation may require ffmpeg installed on your host architecture.
+```
 
-💻 Usage & Verification
-Run Automated Local Evaluation (Smoke-Test)
-You can evaluate any arbitrary .wav audio track across all three pipeline states using the command-line utility script local_test.py:
+---
 
-python local_test.py \
-    --audio path/to/sample.wav \
-    --speech_ckpt Results/speech_best_model.pt \
-    --text_ckpt   Results/text_best_model.pt \
-    --fusion_ckpt Results/fusion_best_model.pt
+# Run the Application
 
-Launch Interactive Streamlit Server Locally
-To boot up the complete visual user interface along with local device acceleration hosting, execute:
-
+```bash
 streamlit run app.py
+```
 
-📈 Model Training History Logs
-Below are the objective loss metrics and normalized validation matrices captured directly from the experimental environments:
+---
 
-1. Speech Architecture Analysis
-Smooth validation descent down to cross-entropy ceilings with near-total class differentiation.
+# Example Workflow
 
-2. Linguistic Text Architecture Analysis
-Highlights natural performance limitations caused by single-word lexical constraints.
+1. Upload a WAV audio file
+2. System extracts MFCC features
+3. Prosody statistics are computed
+4. Prosody converted into natural language
+5. Speech model predicts emotion
+6. BERT predicts emotion from text
+7. Fusion model combines both predictions
+8. Final emotion displayed with confidence scores
 
-3. Gated Multimodal Fusion Analysis
-Demonstrates rapid optimization stability and total structural recovery across all classifications.
+---
 
-🎓 Acknowledgments & References
-Dataset: Toronto Emotional Speech Set (TESS) supplied by the University of Toronto, Department of Psychology.
+# Future Improvements
 
-Developed as part of an academic deep-learning exploration into cross-modal integration bridges using PyTorch and Hugging Face Transformers.
+Potential enhancements include:
+
+* Transformer-based speech encoders
+* Self-supervised speech models
+* Real-world noisy datasets
+* Emotion localization over time
+* Better prosody verbalization
+* Temporal-aware attention pooling
+* Data augmentation techniques
+* Real-time microphone inference
+
+
+
+---
+
+# Conclusion
+
+This project demonstrates how multimodal learning can significantly improve emotion recognition systems by combining:
+
+* Acoustic speech dynamics
+* Linguistic reasoning
+* Adaptive fusion mechanisms
+
+The most important innovation is the **prosody verbalization bridge**, which enables a pre-trained language model like BERT to reason over acoustic emotion cues without modifying its architecture. 
+
+---
+
+# Author
+
+## Lakshmi Krishna V R
+
+* Saintgits College of Engineering
+* Department of Computer Science and Engineering
+
+---
+
+# Citation
+
+If you use this work, please cite:
+
+```bibtex
+@project{multimodal_emotion_recognition,
+  author = {Lakshmi Krishna V R},
+  title = {Multimodal Emotion Recognition using Speech, Text, and Gated Fusion},
+  year = {2026},
+  institution = {Saintgits College of Engineering}
+}
+```
+
+---
+
