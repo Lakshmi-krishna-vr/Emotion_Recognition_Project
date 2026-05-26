@@ -185,7 +185,8 @@ The project includes a fully interactive Streamlit deployment.
   │       ├── train.py
   │       └── test.py
   ├── data/                      ← dataset goes here (Step H)
-  └── Results/                   ← models from Colab go here (Step 3)
+  └── Results/
+          |-prosody_descriptions.csv          ← models from Colab go here (Step 3)
 
 ```
 
