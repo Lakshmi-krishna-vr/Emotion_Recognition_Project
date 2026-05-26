@@ -93,203 +93,6 @@ The project uses the **TESS dataset**, containing recordings from two female act
                       │
               7-class Emotion
 ```
-
----
-
-# Speech Pipeline
-
-## Feature Extraction using MFCCs
-
-The speech pipeline processes raw audio into MFCC-based features. 
-
-### Features Used
-
-* 40 MFCC coefficients
-* Delta coefficients (Δ)
-* Delta-delta coefficients (ΔΔ)
-
-Final feature dimension:
-
-```text
-40 × 3 = 120-dimensional feature vector
-```
-
-### Why MFCC?
-
-MFCCs are highly effective for speech emotion recognition because they:
-
-* Capture vocal timbre
-* Preserve spectral information
-* Encode speech dynamics
-* Reduce irrelevant information
-
----
-
-## BiLSTM Temporal Modeling
-
-The extracted MFCC sequences are passed into a:
-
-```text
-2-layer Bidirectional LSTM
-```
-
-### Configuration
-
-| Parameter            | Value          |
-| -------------------- | -------------- |
-| Hidden size          | 256            |
-| Directions           | Bidirectional  |
-| Final representation | 512 dimensions |
-| Dropout              | 0.3            |
-
-### Why BiLSTM?
-
-BiLSTM captures:
-
-* Past context
-* Future context
-* Emotional progression over time
-
-This is important because emotions evolve throughout speech.
-
----
-
-## Attention Mechanism
-
-An attention layer learns which parts of speech are emotionally important.
-
-Instead of treating all frames equally, attention focuses on:
-
-* Sudden pitch changes
-* Emotional bursts
-* Intonation peaks
-* Voice stress regions
-
-This improves emotion discrimination significantly. 
-
----
-
-# Text Pipeline
-
-## Prosody-to-Text Conversion
-
-Instead of using only raw transcripts, the system converts acoustic statistics into natural-language descriptions. 
-
-### Extracted Prosody Features
-
-The following acoustic properties are computed using `librosa`:
-
-* RMS energy
-* Pitch statistics (F0)
-* Pitch variation
-* Voiced ratio
-* Zero-crossing rate
-* Spectral centroid
-* Harmonic-to-noise ratio
-
-### Example Generated Description
-
-```text
-"The speaker has very loud and energetic voice,
-high pitched tone, wide pitch variation,
-fast speaking rate, bright sharp timbre."
-```
-
----
-
-## Fine-tuned BERT
-
-The generated textual descriptions are processed using:
-
-```text
-bert-base-uncased
-```
-
-### Training Strategy
-
-* Bottom 6 layers frozen
-* Top 6 layers fine-tuned
-* Max token length: 64
-
-### Why BERT?
-
-BERT understands semantic relationships between:
-
-* Pitch descriptions
-* Vocal intensity
-* Speaking rate
-* Voice quality
-
-This allows emotion inference from verbalized acoustic patterns.
-
----
-
-# Multimodal Fusion
-
-## Gated Fusion Architecture
-
-The speech and text embeddings are fused using a learnable gating mechanism. 
-
-### Inputs
-
-| Representation   | Dimension |
-| ---------------- | --------- |
-| Speech embedding | 512       |
-| Text embedding   | 768       |
-
-### Fusion Strategy
-
-The gate dynamically decides:
-
-* When to trust speech more
-* When to trust text more
-
-### Why Gated Fusion?
-
-Simple concatenation treats all modalities equally.
-
-Gated fusion learns adaptive weighting depending on the input characteristics.
-
-Example:
-
-* Angry → speech dominates
-* Sad → text cues become more important
-
----
-
-# Training Configuration
-
-## Speech Model
-
-| Parameter     | Value |
-| ------------- | ----- |
-| Optimizer     | AdamW |
-| Learning Rate | 1e-3  |
-| Batch Size    | 32    |
-| Epochs        | 30    |
-
----
-
-## Text Model
-
-| Parameter     | Value |
-| ------------- | ----- |
-| Optimizer     | AdamW |
-| Learning Rate | 2e-5  |
-| Batch Size    | 32    |
-| Epochs        | 15    |
-
----
-
-## Fusion Model
-
-| Parameter   | Value |
-| ----------- | ----- |
-| Non-BERT LR | 2e-5  |
-| BERT LR     | 2e-6  |
-| Batch Size  | 8     |
-| Epochs      | 20    |
-
 ---
 
 # Results
@@ -357,34 +160,33 @@ The project includes a fully interactive Streamlit deployment.
 # Project Structure
 
 ```text
-emotion-recognition/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── models/
-│   ├── speech_model.pth
-│   ├── text_model.pth
-│   └── fusion_model.pth
-│
-├── notebooks/
-│   ├── speech_pipeline.ipynb
-│   ├── text_pipeline.ipynb
-│   └── fusion_pipeline.ipynb
-│
-├── utils/
-│   ├── audio_utils.py
-│   ├── text_utils.py
-│   └── fusion_utils.py
-│
-├── dataset/
-│   └── TESS/
-│
-└── assets/
-    ├── architecture.png
-    ├── confusion_matrix.png
-    └── ui_demo.png
+ emotion_project/
+  ├── utils.py
+  ├── local_test.py
+  ├── analyze.py
+  ├── requirements.txt
+  ├── VSCODE_SETUP.sh
+  ├── Emotion_Recognition_Training.ipynb
+  ├── .vscode/
+  │   ├── launch.json
+  │   └── settings.json
+  ├── models/
+  │   ├── __init__.py
+  │   ├── speech_pipeline/
+  │   │   ├── __init__.py
+  │   │   ├── train.py
+  │   │   └── test.py
+  │   ├── text_pipeline/
+  │   │   ├── __init__.py
+  │   │   ├── train.py
+  │   │   └── test.py
+  │   └── fusion_pipeline/
+  │       ├── __init__.py
+  │       ├── train.py
+  │       └── test.py
+  ├── data/                      ← dataset goes here (Step H)
+  └── Results/                   ← models from Colab go here (Step 3)
+
 ```
 
 ---
