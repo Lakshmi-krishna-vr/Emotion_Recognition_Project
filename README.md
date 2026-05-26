@@ -29,33 +29,33 @@ This project splits processing into three concurrent pipelines using standard au
 
 1. **Speech-Only Pipeline:** Extracts 40-dimensional Mel-Frequency Cepstral Coefficients (MFCC) alongside their first and second-order temporal derivatives ($\Delta$ and $\Delta\Delta$), yielding a 120-dimensional frame feature vector. These inputs pass through a 2-layer **Bidirectional LSTM (BiLSTM)** supported by an **Additive Single-Layer Attention Mechanism** to emphasize high-confidence emotional fragments.
 2. **Text-Only Pipeline:** Computes 9 structural prosodic statistics (RMS energy, fundamental frequency $F_0$, zero-crossing rates, spectral centroids, and Harmonic-to-Noise Ratios) via `librosa`. These statistics are translated into natural-language sentences (e.g., *"The speaker has high pitched tone, fast speaking rate..."*) and combined with the target token, bypassing structural limitations using a parameter-efficient **Fine-Tuned BERT Encoder** (top 6 layers unfrozen).
-3. **Gated Multimodal Fusion Pipeline:** Integrates hidden contexts from both architectures. Instead of uniform feature concatenation,
-4. it evaluates a learnable **Gated Fusion Network** that dynamically assigns importance weights to each sensory branch based on dimensional proximity matrixes.
+3. **Gated Multimodal Fusion Pipeline:** Integrates hidden contexts from both architectures. Instead of uniform feature concatenation, it evaluates a learnable **Gated Fusion Network** that dynamically assigns importance weights to each sensory branch based on dimensional proximity matrixes.
 
-┌───────────────┐
-               │  Audio File   │
-               └───────┬───────┘
-                       │
-       ┌───────────────┴───────────────┐
-       ▼                               ▼
-[MFCC Extraction]             [Prosody Verbalization]
-Shape: [T, 120]               "Voice cues: Loud voice..."
-│                               │
-▼                               ▼
-BiLSTM + Attention              Fine-Tuned BERT
-Speech Context vector (s)      Text Context vector (t)
-│                               │
-└───────────────┬───────────────┘
-▼
-┌──────────────────┐
-│   Gated Fusion   │◄── Dynamically scales weights
-└──────────────────┘
-│
-▼
-┌──────────────────┐
-│  7-Class Output  │
-└──────────────────┘
----
+```text
+                   ┌───────────────┐
+                   │  Audio File   │
+                   └───────┬───────┘
+                           │
+           ┌───────────────┴───────────────┐
+           ▼                               ▼
+   [MFCC Extraction]             [Prosody Verbalization]
+     Shape: [T, 120]               "Voice cues: Loud voice..."
+           │                               │
+           ▼                               ▼
+    BiLSTM + Attention              Fine-Tuned BERT
+  Speech Context vector (s)      Text Context vector (t)
+           │                               │
+           └───────────────┬───────────────┘
+                           │
+                           ▼
+                 ┌──────────────────┐
+                 │   Gated Fusion   │◄── Dynamically scales weights
+                 └──────────────────┘
+                           │
+                           ▼
+                 ┌──────────────────┐
+                 │  7-Class Output  │
+                 └──────────────────┘
 
 ## 📊 Experimental Setup & Performance
 
