@@ -15,7 +15,7 @@ The project is trained and evaluated on the **TESS (Toronto Emotional Speech Set
 Add your deployed Streamlit link here:
 
 ```txt
-https://your-streamlit-app-link.streamlit.app
+[https://your-streamlit-app-link.streamlit.app](https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/)
 ```
 
 ---
