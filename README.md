@@ -467,7 +467,7 @@ emotion-recognition/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/emotion-recognition.git
+git clone https://github.com/Lakshmi-krishna-vr/Emotion_Recognition_Project/
 
 cd emotion-recognition
 ```
@@ -561,18 +561,4 @@ The most important innovation is the **prosody verbalization bridge**, which ena
 
 ---
 
-# Citation
-
-If you use this work, please cite:
-
-```bibtex
-@project{multimodal_emotion_recognition,
-  author = {Lakshmi Krishna V R},
-  title = {Multimodal Emotion Recognition using Speech, Text, and Gated Fusion},
-  year = {2026},
-  institution = {Saintgits College of Engineering}
-}
-```
-
----
 
