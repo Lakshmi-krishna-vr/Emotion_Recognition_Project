@@ -124,39 +124,6 @@ The project includes a fully interactive Streamlit deployment.
 
 ---
 
-# Tech Stack
-
-## Languages
-
-* Python
-
-## Deep Learning Frameworks
-
-* PyTorch
-* Transformers
-
-## Audio Processing
-
-* Librosa
-* NumPy
-
-## NLP
-
-* Hugging Face Transformers
-* BERT
-
-## Visualization
-
-* Matplotlib
-* Seaborn
-
-## Deployment
-
-* Streamlit
-* Streamlit Community Cloud
-
----
-
 # Project Structure
 
 ```text
@@ -266,6 +233,8 @@ https://drive.google.com/file/d/1XG_4Oz8DzKRY_kz7OFdMlNT-nblsmz0X/view?usp=drive
 https://drive.google.com/file/d/1kOPOc18u3gq8iESDpG1NkfgSsCTrxX0A/view?usp=drive_link
 ```
 
+Download dataset and model checkpoints from the provided links.
+
 ---
 
 # Run the Application
@@ -275,6 +244,40 @@ streamlit run app.py
 ```
 
 ---
+
+# Tech Stack
+
+## Languages
+
+* Python
+
+## Deep Learning Frameworks
+
+* PyTorch
+* Transformers
+
+## Audio Processing
+
+* Librosa
+* NumPy
+
+## NLP
+
+* Hugging Face Transformers
+* BERT
+
+## Visualization
+
+* Matplotlib
+* Seaborn
+
+## Deployment
+
+* Streamlit
+* Streamlit Community Cloud
+  
+---
+
 # Key Observations
 
 ## Speech Model Performance
