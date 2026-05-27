@@ -18,7 +18,7 @@ https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/
 
 # Pretrained Model Checkpoints
 
-## Fusion Model
+Fusion Model
 
 
 https://drive.google.com/file/d/14Nc9VKp3ALGyuaQQ1iaLt6o4LC0SNQtE/view?usp=drive_link
@@ -26,7 +26,7 @@ https://drive.google.com/file/d/14Nc9VKp3ALGyuaQQ1iaLt6o4LC0SNQtE/view?usp=drive
 
 ---
 
-## Speech Model
+Speech Model
 
 
 https://drive.google.com/file/d/1XG_4Oz8DzKRY_kz7OFdMlNT-nblsmz0X/view?usp=drive_link
@@ -34,7 +34,7 @@ https://drive.google.com/file/d/1XG_4Oz8DzKRY_kz7OFdMlNT-nblsmz0X/view?usp=drive
 
 ---
 
-## Text Model
+Text Model
 
 
 https://drive.google.com/file/d/1kOPOc18u3gq8iESDpG1NkfgSsCTrxX0A/view?usp=drive_link
