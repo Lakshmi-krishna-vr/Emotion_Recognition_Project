@@ -166,7 +166,7 @@ The project includes a fully interactive Streamlit deployment.
 ```bash
 git clone https://github.com/Lakshmi-krishna-vr/Emotion_Recognition_Project/
 
-cd emotion-recognition
+cd Project_Emotion
 ```
 
 ---
