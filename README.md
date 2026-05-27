@@ -16,7 +16,7 @@ The project is trained and evaluated on the **TESS (Toronto Emotional Speech Set
 https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/
 ```
 
-# Pretrained Model Checkpoints
+# Trained Model Checkpoints
 
 Fusion Model
 
