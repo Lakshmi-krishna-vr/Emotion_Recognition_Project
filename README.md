@@ -12,9 +12,9 @@ The project is trained and evaluated on the **TESS (Toronto Emotional Speech Set
 
 # Live Demo
 
-```txt
+
 https://lakshmi-krishna-vr-emotion-recognition-project-app-zinsmb.streamlit.app/
-```
+
 
 ## Trained Model Checkpoints
 
