@@ -31,8 +31,7 @@ Three independent pipelines were trained and evaluated:
 | Pipeline          | Input                | Model                |
 | ----------------- | -------------------- | -------------------- |
 | Speech-only       | MFCC audio features  | BiLSTM + Attention   |
-| Text-only         | transcript+Prosody 
-                      descriptions         | Fine-tuned BERT      |
+| Text-only         | transcript+Prosody descriptions         | Fine-tuned BERT      |
 | Multimodal Fusion | Speech + Text        | Gated Fusion Network |
 
 The system predicts the following emotions:
