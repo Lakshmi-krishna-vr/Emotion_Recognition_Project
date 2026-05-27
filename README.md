@@ -232,7 +232,7 @@ https://drive.google.com/file/d/1XG_4Oz8DzKRY_kz7OFdMlNT-nblsmz0X/view?usp=drive
 ```txt id="text-model"
 https://drive.google.com/file/d/1kOPOc18u3gq8iESDpG1NkfgSsCTrxX0A/view?usp=drive_link
 ```            
-
+Download the dataset from the following Google Drive link:
 ---
 
 # Run the Application
